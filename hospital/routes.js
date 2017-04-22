@@ -19,6 +19,9 @@ class HospitalRouter extends Router {
                 new Route("get", "getHospital"),
                 new Route("put", "updateHospital"),
                 new Route("delete", "deleteHospital")
+            ],
+            '/hospital/:location': [
+                new Route("get", "getHospitalByLocation")
             ]
         };
     }
@@ -41,6 +44,10 @@ class HospitalRouter extends Router {
 
     deleteHospital(req, res, next) {
         hospitalController.deleteHospital(req.hospital, res, next);
+    }
+
+    getHospitalByLocation(req, res, next) {
+        hospitalController.getHospitalByLocation(req.query, res, next);
     }
 }
 exports.HospitalRouter = HospitalRouter;

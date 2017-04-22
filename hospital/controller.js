@@ -2,7 +2,7 @@ var { HospitalModel } = require('./model');
 
 class HospitalController {
     loadHospitalById(req, res, next, id) {
-        ContactModel.GetHospitalById(id)
+        HospitalModel.GetHospitalById(id)
             .then(hospital => {
                 req.hospital = hospital;
                 return next();
@@ -37,6 +37,15 @@ class HospitalController {
         persitedHospital.remove()
             .then(deletedHospital => res.json(deletedHospital))
             .catch(e => next(e));
+    }
+
+    getHospitalByLocation(query, res, next){
+         HospitalModel.findOne({ query })
+            .exec()
+            .then((hospital) => {
+                if (!hospital) { return callback(null, false); }
+                res.json(hospital)
+            }).catch(e => callback(e));
     }
 }
 

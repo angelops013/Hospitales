@@ -2,25 +2,58 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 const PacienteSchema = new Schema({
-    Identificacion: String,
-    TipoIdentificacion: String,
-    Nombre: String,
-    PrimerApellido: String,
+    Identificacion: {
+        type: String,
+        required: true
+    },
+    TipoIdentificacion: {
+        type: String,
+        required: true
+    },
+    Nombre: {
+        type: String,
+        required: true
+    },
+    PrimerApellido: {
+        type: String,
+        required: true
+    },
     SegundoApellido: String,
-    Genero: String,
-    FechaNacimiento: Date,
-    Edad: Number,
-    FechaIngreso: Date,
-    MotivoIngreso: String,
-    FactorRH: String,
+    Genero: {
+        type: String,
+        required: true
+    },
+    FechaNacimiento: {
+        type: Date,
+        required: true
+    },
+    FactorRH: {
+        type: String,
+        required: true
+    }
 });
 
 const HospitalSchema = new Schema({
-    CodigoHospital: Number,
-    NombreHospital: String,
-    Direccion: String,
-    Telefono: String,
-    NivelHospital: Number,
+    CodigoHospital: {
+        type: Number,
+        required: true
+    },
+    NombreHospital: {
+        type: String,
+        required: true
+    },
+    Direccion: {
+        type: String,
+        required: true
+    },
+    Telefono: {
+        type: String,
+        required: true
+    },
+    NivelHospital: {
+        type: Number,
+        required: true
+    },
     PacienteList: [PacienteSchema],
     location: {
         type: {
