@@ -1,6 +1,17 @@
-var { Router, Route } = require('../router');
-var { hospitalController } = require('./controller');
-var { HospitalModel } = require('./model');
+var {
+    Router,
+    Route
+} = require('../router');
+var {
+    hospitalController
+} = require('./controller');
+var {
+    HospitalModel
+} = require('./model');
+var authController = require('../oauth2/auth');
+var {
+    PermisoController
+} = require('../oauth2/permiso/controller');
 
 class HospitalRouter extends Router {
 
@@ -12,42 +23,54 @@ class HospitalRouter extends Router {
     get routes() {
         return {
             '/hospitals': [
-                new Route("get", "getHospitalList"),
-                new Route("post", "createHospital")
+                new Route("get", [authController.isAuthenticated, "getHospitalList"]),
+                new Route("post", [authController.isAuthenticated, "createHospital"])
             ],
             '/hospitals/:hospitalId': [
-                new Route("get", "getHospital"),
-                new Route("put", "updateHospital"),
-                new Route("delete", "deleteHospital")
+                new Route("get", [authController.isAuthenticated, "getHospital"]),
+                new Route("put", [authController.isAuthenticated, "updateHospital"]),
+                new Route("delete", [authController.isAuthenticated, "deleteHospital"])
             ],
             '/hospital/:location': [
-                new Route("get", "getHospitalByLocation")
+                new Route("get", [authController.isAuthenticated, "getHospitalByLocation"])
             ]
         };
     }
 
     createHospital(req, res, next) {
-        hospitalController.createHospital(req, res, next);
+        if (PermisoController.ValidarPermiso("crearHospital", req.user)) {
+            hospitalController.createHospital(req, res, next);
+        }
     }
 
     getHospitalList(req, res, next) {
-        hospitalController.listHospital(req.query, res, next);
+        if (PermisoController.ValidarPermiso("consultarHospital", req.user)) {
+            hospitalController.listHospital(req.query, res, next);
+        }
     }
 
     getHospital(req, res, next) {
-        return res.json(req.hospital);
+        if (PermisoController.ValidarPermiso("consultarHospital", req.user)) {
+            return res.json(req.hospital);
+        }
     }
 
     updateHospital(req, res, next) {
-        hospitalController.updateHospital(req.hospital, req.body, res, next);
+        if (PermisoController.ValidarPermiso("editarHospital", req.user)) {
+            hospitalController.updateHospital(req.hospital, req.body, res, next);
+        }
     }
 
     deleteHospital(req, res, next) {
-        hospitalController.deleteHospital(req.hospital, res, next);
+        if (PermisoController.ValidarPermiso("eliminarHospital", req.user)) {
+            hospitalController.deleteHospital(req.hospital, res, next);
+        }
     }
 
     getHospitalByLocation(req, res, next) {
-        hospitalController.getHospitalByLocation(req.query, res, next);
+        if (PermisoController.ValidarPermiso("consultarHospital", req.user)) {
+            hospitalController.getHospitalByLocation(req.query, res, next);
+        }
     }
 }
 exports.HospitalRouter = HospitalRouter;
